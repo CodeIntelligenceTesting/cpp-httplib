@@ -74,10 +74,13 @@ string(REGEX MATCH "([0-9]+\\.?)+" _httplib_version "${_raw_version_string}")
 
 project(httplib
 	VERSION ${_httplib_version}
-	LANGUAGES CXX
+	LANGUAGES C CXX
 	DESCRIPTION "A C++ header-only HTTP/HTTPS server and client library."
 	HOMEPAGE_URL "https://github.com/yhirose/cpp-httplib"
 )
+
+find_package(cifuzz NO_SYSTEM_ENVIRONMENT_PATH)
+enable_fuzz_testing()
 
 # Change as needed to set an OpenSSL minimum version.
 # This is used in the installed Cmake config file.
@@ -307,3 +310,7 @@ if(HTTPLIB_TEST)
     include(CTest)
     add_subdirectory(test)
 endif()
+
+add_fuzz_test(fuzz fuzz.cpp)
+target_link_libraries(fuzz PRIVATE ${PROJECT_NAME})
+

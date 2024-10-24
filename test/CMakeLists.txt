@@ -1,34 +1,19 @@
-find_package(GTest)
-
-if(GTest_FOUND)
-    if(NOT TARGET GTest::gtest_main AND TARGET GTest::Main)
-        # CMake <3.20
-        add_library(GTest::gtest_main INTERFACE IMPORTED)
-        target_link_libraries(GTest::gtest_main INTERFACE GTest::Main)
-    endif()
-else()
-    if(POLICY CMP0135)
-        cmake_policy(SET CMP0135 NEW)
-    endif()
-
-    include(FetchContent)
-
-    set(BUILD_GMOCK OFF)
-    set(INSTALL_GTEST OFF)
-    set(gtest_force_shared_crt ON)
-
-    FetchContent_Declare(
-        gtest
-        URL https://github.com/google/googletest/archive/main.tar.gz
-    )
-    FetchContent_MakeAvailable(gtest)
-endif()
+include(FetchContent)
+FetchContent_Declare(
+  googletest
+  URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip
+)
+# For Windows: Prevent overriding the parent project's compiler/linker settings
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(googletest)
 
 find_package(CURL REQUIRED)
 
 add_executable(httplib-test test.cc)
 target_compile_options(httplib-test PRIVATE "$<$<CXX_COMPILER_ID:MSVC>:/utf-8;/bigobj>")
 target_link_libraries(httplib-test PRIVATE httplib GTest::gtest_main CURL::libcurl)
+
+include(GoogleTest)
 gtest_discover_tests(httplib-test)
 
 file(
