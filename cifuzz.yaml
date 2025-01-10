@@ -1,1 +1,5 @@
 build-system: cmake
+
+build-system-args:
+  - -DHTTPLIB_COMPILE=ON
+  - -DHTTPLIB_TEST=ON
