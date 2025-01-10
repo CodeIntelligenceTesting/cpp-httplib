@@ -1,0 +1,4 @@
+The function `httplib::Server.Get(...)` can throw an exception if the first
+parameter is not a valid regex. Such cases are not considered a valid finding
+and should be handled by the fuzz test e.g. by wrapping the function call in a
+try-catch block and returning early.
