@@ -314,3 +314,4 @@ endif()
 add_fuzz_test(fuzz fuzz.cpp)
 target_link_libraries(fuzz PRIVATE ${PROJECT_NAME})
 
+add_subdirectory(cifuzz-spark)
